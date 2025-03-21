@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_application_1/pages/announcement_page.dart';
+import 'package:flutter_application_1/pages/discover_page.dart';
+import 'pages/home.dart';
+import 'pages/discover_page.dart';
+import 'pages/announcement_page.dart';
+import 'pages/support_page.dart';
+import 'pages/library_page.dart';
+import 'pages/starfish_page.dart';
 
 /*
-
-    Handles the header main header on every navigation pages
-    Also handles the subheader and all headers.
-
+    Handles the main header and subheader on every navigation page.
+    Centralizes navigation logic for all buttons.
 */
+
 class MainHeader extends StatelessWidget implements PreferredSizeWidget {
   final double offset;
 
-  MainHeader({Key? key, this.offset = 150.0})
+  MainHeader({Key? key, this.offset = 130.0})
       : preferredSize = Size.fromHeight(80.0),
         super(key: key);
 
@@ -26,10 +32,10 @@ class MainHeader extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Row(
             children: [
-              SizedBox(width: offset), //  offset
+              SizedBox(width: offset), // Offset for alignment
               Container(
-                width: 50, //  width
-                height: 60, //  height
+                width: 50,
+                height: 60,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/Hogwartscrest.jpg'),
@@ -38,16 +44,12 @@ class MainHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               SizedBox(width: 8),
-              Icon(
-                Icons.more_vert,
-                color: const Color.fromARGB(255, 233, 232, 232),
-              ),
               Text(
                 "SUNY Hogwarts",
                 style: TextStyle(
                   color: const Color.fromARGB(255, 33, 34, 34),
                   fontSize: 35.0,
-                  fontFamily: 'OpenSans', 
+                  fontFamily: 'OpenSans',
                 ),
               ),
             ],
@@ -69,10 +71,6 @@ class MainHeader extends StatelessWidget implements PreferredSizeWidget {
                 iconSize: 37.0,
                 onPressed: () {},
               ),
-              Icon(
-                Icons.more_vert,
-                color: const Color.fromARGB(255, 233, 232, 232),
-              ),
               Container(
                 width: 40,
                 height: 40,
@@ -87,84 +85,12 @@ class MainHeader extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 8),
-              PopupMenuButton<String>(
-                offset: Offset(20, 40),
-                onSelected: (value) {
-                  // Handle the selected value
+              IconButton(
+                icon: Icon(Icons.settings_outlined, color: const Color.fromARGB(255, 39, 39, 39)), 
+                iconSize: 37.0,
+                onPressed: () {
+                   //nothing for now
                 },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'Profile',
-                      child: Text('Profile'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Notifications',
-                      child: Text('Notifications'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Account Settings',
-                      child: Text('Account Settings'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Progress',
-                      child: Text('Progress'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'English',
-                      child: Text('English'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Log Out',
-                      child: Text('Log Out'),
-                    ),
-                  ];
-                },
-                child: Text(
-                  "Cedric Petilos",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 33, 34, 34),
-                    fontSize: 12.0, // Smaller text size
-                  ),
-                ),
-              ),
-              PopupMenuButton<String>(
-                offset: Offset(0, 40),
-                onSelected: (value) {
-                  // Handle the selected value
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'Organization Related',
-                      child: Text('Organization Related', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Audio/Video Note Editor',
-                      child: TextButton(
-                        onPressed: () {
-                          // Action for Audio/Video Note Editor
-                        },
-                        child: Text('Audio/Video Note Editor'),
-                      ),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Media',
-                      child: TextButton(
-                        onPressed: () {
-                          // Action for Media
-                        },
-                        child: Text('Media'),
-                      ),
-                    ),
-                  ];
-                },
-                child: Icon(
-                  Icons.settings_outlined,
-                  color: const Color.fromARGB(255, 2, 2, 2),
-                  size: 42.0,
-                ),
               ),
             ],
           ),
@@ -176,8 +102,9 @@ class MainHeader extends StatelessWidget implements PreferredSizeWidget {
 
 class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
   final double offset;
+  final VoidCallback onHomePressed;
 
-  SecondaryHeader({Key? key, this.offset = 0.0})
+  SecondaryHeader({Key? key, this.offset = 0.0, required this.onHomePressed})
       : preferredSize = Size.fromHeight(80.0),
         super(key: key);
 
@@ -189,12 +116,13 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: const Color.fromARGB(255, 9, 63, 108),
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // Align to the left
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(width: offset), // Customizable offset
+          SizedBox(width: offset), // Offset for alignment
           TextButton(
             onPressed: () {
-              // Action for My Home
+              // Navigate back to the first route (HomePage)
+              Navigator.of(context).popUntil((route) => route.isFirst);
             },
             child: Text(
               "My Home",
@@ -206,7 +134,7 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton(
             onPressed: () {
-              // Action for Announcements
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AnnouncementPage()));
             },
             child: Text(
               "Announcements",
@@ -218,7 +146,7 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton(
             onPressed: () {
-              // Action for Discover
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DiscoverPage()));
             },
             child: Text(
               "Discover",
@@ -231,25 +159,15 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
           PopupMenuButton<String>(
             offset: Offset(0, 40),
             onSelected: (value) {
-              // Handle the selected value
+              if (value == 'IT Service Desk') {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SupportPage()));
+              }
             },
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem<String>(
                   value: 'IT Service Desk',
                   child: Text('IT Service Desk'),
-                ),
-                PopupMenuItem<String>(
-                  value: 'Faculty Documentation',
-                  child: Text('Faculty Documentation'),
-                ),
-                PopupMenuItem<String>(
-                  value: 'Student Documentation',
-                  child: Text('Student Documentation'),
-                ),
-                PopupMenuItem<String>(
-                  value: 'Brightspace Ticket',
-                  child: Text('Brightspace Ticket'),
                 ),
               ];
             },
@@ -272,7 +190,11 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
           PopupMenuButton<String>(
             offset: Offset(0, 40),
             onSelected: (value) {
-              // Handle the selected value
+              if (value == 'Library') {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LibraryPage()));
+              } else if (value == 'Starfish') {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StarfishPage()));
+              }
             },
             itemBuilder: (BuildContext context) {
               return [
@@ -307,3 +229,4 @@ class SecondaryHeader extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+
