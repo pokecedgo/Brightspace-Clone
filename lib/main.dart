@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'headers.dart';
 import 'pages/home.dart';
-
+import 'pages/discover_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,39 +14,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.jumpToPage(index);
+  void _goToHome() {
+    _pageController.jumpToPage(0); // Navigate to the first page (HomePage)
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: MainHeader(offset: 130.0), // offset header1 Value
-        body: Column(
+        body: PageView(
+          controller: _pageController,
           children: [
-            SecondaryHeader(offset: 125.0), // offset subheader Value
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                },
-                children: [
-                  HomePage(), // Use HomePage
-                 
-                  // Other pages
-                ],
-              ),
-            ),
+            HomePage(), // HomePage as the first page
+            DiscoverPage(), // Other pages
           ],
         ),
       ),

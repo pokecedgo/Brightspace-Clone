@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/banner_settings.dart';
 import 'package:flutter_application_1/course_maker.dart';
-
+import 'package:flutter_application_1/courseDisplayer.dart';
+import '../headers.dart';
 
 /*
     HomePage 
@@ -12,15 +13,18 @@ class HomePage extends StatefulWidget {
   final double boxWidth;
   final double xOffset;
   final double yOffset;
+  final double coursesYOffset; 
   final Color boxBackgroundColor;
 
-  HomePage({
+  const HomePage({
+    Key? key,
     this.boxHeight = 500.0,
     this.boxWidth = 200.0,
     this.xOffset = 0.0, // Default x offset value
     this.yOffset = 40.0, // Default y offset value
+    this.coursesYOffset = 20.0, // Default courses y offset value
     this.boxBackgroundColor = const Color.fromARGB(255, 255, 255, 255), // Default background color
-  });
+  }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -32,254 +36,316 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      appBar: MainHeader(offset: 130.0), // Include MainHeader
+      body: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                width: BannerSettings.bannerWidth,
-                height: BannerSettings.bannerHeight,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/banner.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 30,
-                left: 40,
-                child: Text(
-                  "SUNY Hogwarts",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 40.0,
-                    fontFamily: 'OpenSans', // Open Sans font
-                  ),
-                ),
-              ),
-            ],
+          SecondaryHeader(
+            offset: 130.0,
+            onHomePressed: () {
+              // Do nothing, already on HomePage
+            },
           ),
-          SizedBox(height: widget.yOffset), // Use the yOffset value here
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.only(left: widget.xOffset), // Use the xOffset value here
-                width: (2 / 3) * BannerSettings.bannerWidth,
-                height: widget.boxHeight,
-                decoration: BoxDecoration(
-                  color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  children: [
-                    CourseMaker.createCourseBox(
-                      imagePath: 'assets/darkmagic.jpg',
-                      title: '25SP Intro to Dark Magic',
-                      description: 'DMC105 SPR25 Introduction to Dark Magic',
-                      onTap: () {
-                        // Action for Course 1
-                      },
-                    ),
-                    CourseMaker.createCourseBox(
-                      imagePath: 'assets/quidditch.jpg',
-                      title: '25SP Advanced Quidditch',
-                      description: 'QUI201 SPR25 Advanced Quidditch',
-                      onTap: () {
-                        // Action for Course 2
-                      },
-                    ),
-                    CourseMaker.createCourseBox(
-                      imagePath: 'assets/ravenclaw.jpg',
-                      title: '25SP House of Ravenclaw',
-                      description: 'RAV101 SPR25 House of Ravenclaw',
-                      onTap: () {
-                        // Action for Course 3
-                      },
-                    ),
-                    CourseMaker.createCourseBox(
-                      imagePath: 'assets/necromancy.jpg',
-                      title: '25SP Necromancy 101',
-                      description: 'NEC101 SPR25 Necromancy 101',
-                      onTap: () {
-                        // Action for Course 4
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              //Box1
-              SizedBox(width: 10),
-              Column(
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  Container(
-                    width: (1 / 3) * BannerSettings.bannerWidth,
-                    height: widget.boxHeight / 3,
-                    decoration: BoxDecoration(
-                      color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isAnnouncementsExpanded = !isAnnouncementsExpanded;
-                              });
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Announcements",
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Icon(
-                                  isAnnouncementsExpanded
-                                      ? Icons.arrow_drop_up
-                                      : Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                  // Banner Section
+                  Stack(
+                    children: [
+                      Container(
+                        width: BannerSettings.bannerWidth,
+                        height: BannerSettings.bannerHeight,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/banner.jpg'),
+                            fit: BoxFit.cover,
                           ),
-                          if (isAnnouncementsExpanded) ...[
-                            SizedBox(height: 10),
-                            Text("No announcements for now"),
-                          ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-
-                  //Box2
-
-                  SizedBox(height: 10),
-                  Container(
-                    width: (1 / 3) * BannerSettings.bannerWidth,
-                    height: widget.boxHeight / 3,
-                    decoration: BoxDecoration(
-                      color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isBrightspaceHelpExpanded = !isBrightspaceHelpExpanded;
-                              });
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Brightspace Help",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Icon(
-                                  isBrightspaceHelpExpanded
-                                      ? Icons.arrow_drop_up
-                                      : Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                      Positioned(
+                        bottom: 30,
+                        left: 40,
+                        child: Text(
+                          "SUNY Hogwarts",
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 40.0,
+                            fontFamily: 'OpenSans', // Open Sans font
                           ),
-                          if (isBrightspaceHelpExpanded) ...[
-                            SizedBox(height: 20),
-                            TextButton(
-                              onPressed: () {
-                                // Action for IT Service Desk
-                              },
-                              child: Text("IT Service Desk"),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: widget.yOffset),
+
+                  // Courses Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: widget.xOffset),
+                        width: (2 / 3) * BannerSettings.bannerWidth,
+                        height: widget.boxHeight,
+                        decoration: BoxDecoration(
+                          color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                "My Courses",
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color.fromARGB(255, 14, 14, 14),
+                                ),
+                              ),
                             ),
-                            TextButton(
-                              onPressed: () {
-                                // Action for Brightspace Knowledge Base
-                              },
-                              child: Text("Brightspace Knowledge Base"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Action for Brightspace Ticket
-                              },
-                              child: Text("Brightspace Ticket"),
+                            // Courses Grid with Offset
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: widget.coursesYOffset), // Offset 
+                                child: GridView.count(
+                                  crossAxisCount: 3,
+                                  children: [
+                                    CourseMaker.createCourseBox(
+                                      imagePath: 'assets/darkmagic.jpg',
+                                      title: '25SP Intro to Dark Magic',
+                                      description: 'DMC105 SPR25 Introduction to Dark Magic',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CourseDisplayer(
+                                              courseTitle: '25SP Intro to Dark Magic',
+                                              courseImagePath: 'assets/darkmagic.jpg',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    CourseMaker.createCourseBox(
+                                      imagePath: 'assets/quidditch.jpg',
+                                      title: '25SP Advanced Quidditch',
+                                      description: 'QUI201 SPR25 Advanced Quidditch',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CourseDisplayer(
+                                              courseTitle: '25SP Advanced Quidditch',
+                                              courseImagePath: 'assets/quidditch.jpg',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    CourseMaker.createCourseBox(
+                                      imagePath: 'assets/ravenclaw.jpg',
+                                      title: '25SP House of Ravenclaw',
+                                      description: 'RAV101 SPR25 House of Ravenclaw',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CourseDisplayer(
+                                              courseTitle: '25SP House of Ravenclaw',
+                                              courseImagePath: 'assets/ravenclaw.jpg',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    CourseMaker.createCourseBox(
+                                      imagePath: 'assets/necromancy.jpg',
+                                      title: '25SP Necromancy 101',
+                                      description: 'NEC101 SPR25 Necromancy 101',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CourseDisplayer(
+                                              courseTitle: '25SP Necromancy 101',
+                                              courseImagePath: 'assets/necromancy.jpg',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  //Box3
-                  SizedBox(height: 10),
-                  Container(
-                    width: (1 / 3) * BannerSettings.bannerWidth,
-                    height: widget.boxHeight / 3,
-                    decoration: BoxDecoration(
-                      color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      // Secondary Boxes Section
+                      SizedBox(width: 10),
+                      Column(
                         children: [
-                          Text(
-                            "Upcoming Events",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                          // Announcements Box
+                          Container(
+                            width: (1 / 3) * BannerSettings.bannerWidth,
+                            height: widget.boxHeight / 3,
+                            decoration: BoxDecoration(
+                              color: widget.boxBackgroundColor, // boxBackgroundColor
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              // height: 100,
-                              child: ListView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Welcome to SUNY Hogwarts!"),
-                                  Text("Spring 2025 Semester"),
-                                  Text("Classes start on January 15, 2025"),
-                             
-                                  Text(
-                                  "The primary SUNY email address associated with your account: pcedric1@hogwarts.edu",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // Make the text bold
-                                    fontFamily: 'OpenSans', // Use a different font (replace 'YourFontFamily' with the actual font family name)
-                                    fontSize: 15.0, // Optional: Set the font size
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isAnnouncementsExpanded = !isAnnouncementsExpanded;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Announcements",
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Icon(
+                                          isAnnouncementsExpanded
+                                              ? Icons.arrow_drop_up
+                                              : Icons.arrow_drop_down,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  if (isAnnouncementsExpanded) ...[
+                                    SizedBox(height: 10),
+                                    Text("No announcements for now"),
+                                  ],
                                 ],
                               ),
-                            ), // Add a child widget here
+                            ),
+                          ),
+
+                          // Brightspace Help Box
+                          SizedBox(height: 10),
+                          Container(
+                            width: (1 / 3) * BannerSettings.bannerWidth,
+                            height: widget.boxHeight / 3,
+                            decoration: BoxDecoration(
+                              color: widget.boxBackgroundColor, //  boxBackgroundColor 
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isBrightspaceHelpExpanded = !isBrightspaceHelpExpanded;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Brightspace Help",
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Icon(
+                                          isBrightspaceHelpExpanded
+                                              ? Icons.arrow_drop_up
+                                              : Icons.arrow_drop_down,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (isBrightspaceHelpExpanded) ...[
+                                    SizedBox(height: 20),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Action for IT Service Desk
+                                      },
+                                      child: Text("IT Service Desk"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Action for Brightspace Knowledge Base
+                                      },
+                                      child: Text("Brightspace Knowledge Base"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Action for Brightspace Ticket
+                                      },
+                                      child: Text("Brightspace Ticket"),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Calendar Box
+                          SizedBox(height: 10),
+                          Container(
+                            width: (1 / 3) * BannerSettings.bannerWidth,
+                            height: widget.boxHeight / 3,
+                            decoration: BoxDecoration(
+                              color: widget.boxBackgroundColor, // Use the boxBackgroundColor here
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Upcoming Events",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: ListView(
+                                        children: [
+                                          Text("Welcome to SUNY Hogwarts!"),
+                                          Text("Spring 2025 Semester"),
+                                          Text("Classes start on January 15, 2025"),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ],
       ),
